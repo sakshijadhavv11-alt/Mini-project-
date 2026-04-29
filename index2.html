@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap');
+         :root {
+            --bg: #0f111a;
+            --side-bg: #161a27;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --muted: #a0a7b8;
+            /* Vibrant Palette */
+            --grad-blue: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --grad-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --grad-red: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            --grad-orange: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            --grad-green: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Syne', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            /* Background animated mesh */
+            background-image: radial-gradient(at 0% 0%, rgba(79, 172, 254, 0.15) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(255, 8, 68, 0.1) 0, transparent 50%);
+        }
+        
+        .dashboard {
+            display: flex;
+            width: 100%;
+            max-width: 1600px;
+            margin: 30px auto;
+            gap: 25px;
+            padding: 0 30px;
+        }
+        /* Sidebar with Gradient Accents */
+        
+        aside {
+            width: 300px;
+            background: var(--side-bg);
+            border-radius: 35px;
+            padding: 40px 25px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 20px 0 50px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 30px;
+            height: calc(100vh - 60px);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--grad-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 50px;
+        }
+        
+        .nav-link {
+            padding: 15px 20px;
+            border-radius: 18px;
+            color: var(--muted);
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-link.active {
+            background: var(--grad-purple);
+            color: #fff;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        /* Colorful Stats */
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .stat-box {
+            padding: 30px;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            background: var(--card);
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+        }
+        
+        .stat-total::before {
+            background: var(--grad-blue);
+        }
+        
+        .stat-urgent::before {
+            background: var(--grad-red);
+        }
+        
+        .stat-done::before {
+            background: var(--grad-green);
+        }
+        
+        .stat-val {
+            font-size: 42px;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 5px;
+            font-family: 'DM Mono';
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+        /* Input Section */
+        
+        .input-panel {
+            background: var(--side-bg);
+            padding: 25px;
+            border-radius: 30px;
+            display: flex;
+            gap: 15px;
+            border: 1px solid var(--border);
+        }
+        
+        .input-panel input[type=text] {
+            flex: 1;
+            background: #0f111a;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            color: #fff;
+            font-family: 'Syne';
+            outline: none;
+            transition: 0.3s;
+        }
+        
+        .input-panel input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+        }
+        
+        .btn-deploy {
+            background: var(--grad-blue);
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            padding: 0 35px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+        
+        .btn-deploy:hover {
+            transform: scale(1.05);
+        }
+        /* Task Cards with Priority Colors */
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .task-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+            position: relative;
+        }
+        
+        .task-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        /* Priority Glows */
+        
+        .pri-3 {
+            border-left: 6px solid #ff0844;
+            box-shadow: -10px 0 30px rgba(255, 8, 68, 0.1);
+        }
+        
+        .pri-2 {
+            border-left: 6px solid #f6d365;
+        }
+        
+        .pri-1 {
+            border-left: 6px solid #43e97b;
+        }
+        
+        .check-circle {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            font-weight: 800;
+        }
+        
+        .check-circle.checked {
+            background: var(--grad-green);
+            border: none;
+            color: #000;
+        }
+        
+        .task-body {
+            flex: 1;
+        }
+        
+        .task-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .task-name.done {
+            color: var(--muted);
+            text-decoration: line-through;
+        }
+        
+        .badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-family: 'DM Mono';
+        }
+        
+        .b-urgent {
+            background: rgba(255, 8, 68, 0.15);
+            color: #ff0844;
+        }
+        
+        .b-standard {
+            background: rgba(246, 211, 101, 0.15);
+            color: #f6d365;
+        }
+        
+        .b-minor {
+            background: rgba(67, 233, 123, 0.15);
+            color: #43e97b;
+        }
+        /* Bottom Progress Bar */
+        
+        .footer-progress {
+            margin-top: auto;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .progress-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: var(--grad-blue);
+            transition: 1s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard">
+        <aside>
+            <div class="logo">NEURAL MATRIX</div>
+
+            <div class="nav-link active"><span>Dashboard</span></div>
+            <div class="nav-link"><span>Analytics</span></div>
+            <div class="nav-link"><span>Neural Sort</span></div>
+            <div class="nav-link"><span>Team Space</span></div>
+
+            <div class="footer-progress">
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:14px">
+                    <span>Completion</span>
+                    <span id="pctLabel">0%</span>
+                </div>
+                <div class="progress-bg">
+                    <div id="barFill" class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main>
+            <div class="stats-row">
+                <div class="stat-box stat-total">
+                    <span class="stat-val" id="countTotal">0</span>
+                    <span class="stat-label">Total Missions</span>
+                </div>
+                <div class="stat-box stat-urgent">
+                    <span class="stat-val" id="countUrgent" style="color: #ff0844">0</span>
+                    <span class="stat-label">Urgent Alerts</span>
+                </div>
+                <div class="stat-box stat-done">
+                    <span class="stat-val" id="countDone" style="color: #43e97b">0</span>
+                    <span class="stat-label">Tasks Synced</span>
+                </div>
+            </div>
+
+            <div class="input-panel">
+                <input type="text" id="taskInp" placeholder="Describe the objective...">
+                <select id="priInp" style="background:#0f111a; border:2px solid var(--border); color:#fff; border-radius:15px; padding:0 15px; font-family:'Syne'">
+        <option value="3">Critical</option>
+        <option value="2" selected>Medium</option>
+        <option value="1">Low</option>
+      </select>
+                <button class="btn-deploy" onclick="add()">DEPLOY</button>
+            </div>
+
+            <div class="task-list" id="list"></div>
+        </main>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('vivid_matrix') || '[]');
+
+        function add() {
+            const text = document.getElementById('taskInp').value;
+            if (!text) return;
+            tasks.push({
+                id: Date.now(),
+                text,
+                pri: parseInt(document.getElementById('priInp').value),
+                done: false
+            });
+            document.getElementById('taskInp').value = '';
+            update();
+        }
+
+        function toggle(id) {
+            const t = tasks.find(x => x.id === id);
+            t.done = !t.done;
+            update();
+        }
+
+        function remove(id) {
+            tasks = tasks.filter(x => x.id !== id);
+            update();
+        }
+
+        function update() {
+            localStorage.setItem('vivid_matrix', JSON.stringify(tasks));
+            render();
+        }
+
+        function render() {
+            const container = document.getElementById('list');
+            const sorted = [...tasks].sort((a, b) => a.done - b.done || b.pri - a.pri);
+
+            const done = tasks.filter(t => t.done).length;
+            const total = tasks.length;
+            const pct = total ? Math.round((done / total) * 100) : 0;
+
+            document.getElementById('countTotal').innerText = total;
+            document.getElementById('countUrgent').innerText = tasks.filter(t => t.pri === 3 && !t.done).length;
+            document.getElementById('countDone').innerText = done;
+            document.getElementById('pctLabel').innerText = pct + '%';
+            document.getElementById('barFill').style.width = pct + '%';
+
+            container.innerHTML = sorted.map(t => `
+      <div class="task-card pri-${t.pri}">
+        <div class="check-circle ${t.done ? 'checked' : ''}" onclick="toggle(${t.id})">
+          ${t.done ? '✓' : ''}
+        </div>
+        <div class="task-body">
+          <div class="task-name ${t.done ? 'done' : ''}">${t.text}</div>
+          <span class="badge ${t.pri === 3 ? 'b-urgent' : t.pri === 2 ? 'b-standard' : 'b-minor'}">
+            ${t.pri === 3 ? 'Critical' : t.pri === 2 ? 'Standard' : 'Minor'}
+          </span>
+        </div>
+        <button onclick="remove(${t.id})" style="background:none; border:none; color:var(--muted); cursor:pointer; font-size:24px">×</button>
+      </div>
+    `).join('');
+        }
+
+        render();
+    </script>
+</body>
+
+</html>
